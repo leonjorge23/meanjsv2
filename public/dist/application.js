@@ -123,6 +123,11 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('couples');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
@@ -783,6 +788,196 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
       }
     };
   }
+]);
+
+'use strict';
+
+// Configuring the Articles module
+angular.module('couples').run(['Menus',
+	function (Menus) {
+		// Add the articles dropdown item
+		Menus.addMenuItem('topbar', {
+			title: 'Couples',
+			state: 'couples',
+			type: 'dropdown',
+			roles: ['*']
+		});
+
+		// Add the dropdown list item
+		Menus.addSubMenuItem('topbar', 'couples', {
+			title: 'List Couples',
+			state: 'couples.list'
+		});
+
+		// Add the dropdown create item
+		Menus.addSubMenuItem('topbar', 'couples', {
+			title: 'Add New Couple',
+			state: 'couples.create',
+			roles: ['user']
+		});
+	}
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('couples').config(['$stateProvider',
+	function ($stateProvider) {
+		// Articles state routing
+		$stateProvider
+				.state('couples', {
+					abstract: true,
+					url: '/couples',
+					template: '<ui-view/>'
+				})
+				.state('couples.list', {
+					url: '',
+					templateUrl: 'modules/couples/client/views/list-couples.client.view.html'
+				})
+				.state('couples.create', {
+					url: '/create',
+					templateUrl: 'modules/couples/client/views/create-couple.client.view.html',
+					data: {
+						roles: ['user', 'admin']
+					}
+				})
+				.state('couples.view', {
+					url: '/:coupleID',
+					templateUrl: 'modules/couples/client/views/view-couple.client.view.html'
+				})
+				.state('couples.edit', {
+					url: '/:coupleID/edit',
+					templateUrl: 'modules/couples/client/views/edit-couple.client.view.html',
+					data: {
+						roles: ['user', 'admin']
+					}
+				});
+	}
+]);
+
+'use strict';
+
+// Articles controller
+angular.module('couples').controller('CouplesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Couples',
+	function ($scope, $stateParams, $location, Authentication, Couples) {
+		$scope.authentication = Authentication;
+
+		// Create new Couple
+		$scope.create = function (isValid) {
+			$scope.error = null;
+
+			if (!isValid) {
+				$scope.$broadcast('show-errors-check-validity', 'coupleForm');
+
+				return false;
+			}
+
+			// Create new Couple object
+			var couple = new Couples({
+				hisName: this.hisName,
+				herName: this.herName,
+				lastName: this.lastName,
+				address: this.address,
+				city: this.city,
+				zip: this.zip,
+				state: this.state,
+				homePhone: this.homePhone,
+				hisCell: this.hisCell,
+				herCell: this.herCell,
+				primaryEmail: this.primaryEmail,
+				secondaryEmail: this.secondaryEmail,
+				photo: this.photo,
+				isActive: this.isActive
+			});
+
+			// Redirect after save
+			couple.$save(function (response) {
+				$location.path('couples/' + response._id);
+
+				// Clear form fields
+				$scope.hisName = '';
+				$scope.herName = '';
+				$scope.lastName = '';
+				$scope.address = '';
+				$scope.city = '';
+				$scope.zip = '';
+				$scope.state = '';
+				$scope.homePhone = '';
+				$scope.hisCell = '';
+				$scope.herCell = '';
+				$scope.primaryEmail = '';
+				$scope.secondaryEmail = '';
+				$scope.photo = '';
+				$scope.isActive = '';
+
+			}, function (errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Remove existing Couple
+		$scope.remove = function (couple) {
+			if (couple) {
+				couple.$remove();
+
+				for (var i in $scope.couples) {
+					if ($scope.couples[i] === couple) {
+						$scope.couples.splice(i, 1);
+					}
+				}
+			} else {
+				$scope.couple.$remove(function () {
+					$location.path('couples');
+				});
+			}
+		};
+
+		// Update existing Couple
+		$scope.update = function (isValid) {
+			$scope.error = null;
+
+			if (!isValid) {
+				$scope.$broadcast('show-errors-check-validity', 'articleForm');
+
+				return false;
+			}
+
+			var couple = $scope.couple;
+
+			couple.$update(function () {
+				$location.path('couples/' + couple._id);
+			}, function (errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Find a list of Articles
+		$scope.find = function () {
+			$scope.couples = Couples.query();
+		};
+
+		// Find existing Couple
+		$scope.findOne = function () {
+			$scope.couple = Couples.get({
+				coupleId: $stateParams.coupleId
+			});
+		};
+	}
+]);
+
+'use strict';
+
+//Articles service used for communicating with the articles REST endpoints
+angular.module('couples').factory('Couples', ['$resource',
+	function ($resource) {
+		return $resource('api/couples/:coupleId', {
+			coupleId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
 ]);
 
 'use strict';

@@ -1,0 +1,79 @@
+<div ng-controller="CouplesController" ng-init="findOne()">
+  <div class="container-fluid">
+    <div class="col-lg-12">
+      <h1 class="page-header">Couples Information</h1>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        </div>
+        <div class="panel-body">
+          <dl class="dl-horizontal">
+            <dt>His Name</dt>
+            <dd ng-bind="couple.hisName"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Her Name</dt>
+            <dd ng-bind="couple.herName"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Last Name</dt>
+            <dd ng-bind="couple.lastName"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Address</dt>
+            <dd ng-bind="couple.address"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>City</dt>
+            <dd ng-bind="couple.city"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Zip</dt>
+            <dd ng-bind="couple.zip"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>State</dt>
+            <dd ng-bind="couple.state"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Home Phone</dt>
+            <dd ng-bind="couple.homePhone"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>His Cell</dt>
+            <dd ng-bind="couple.hisCell"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>His Cell</dt>
+            <dd ng-bind="couple.herCell"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Primary Email</dt>
+            <dd ng-bind="couple.primaryEmail"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Secondary Email</dt>
+            <dd ng-bind="couple.secondaryEmail"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Is couple active?</dt>
+            <dd ng-bind="couple.isActive"></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Photo:</dt>
+            <dd>
+              <img ng-src="{{couple.photo}}" alt="" width="450"/>
+            </dd>
+          </dl>
+          <p>
+            <a href="/#!/couples/{{couple._id}}/edit" class="btn btn-warning">edit</a>
+            <a href="#" ng-click="delete();" class="btn btn-danger">delete</a>
+          </p>
+        </div>
+      </div>
+      <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+  </div>
+</div>
+</div>
