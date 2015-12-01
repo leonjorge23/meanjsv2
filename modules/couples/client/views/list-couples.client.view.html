@@ -53,14 +53,14 @@
                       <td ng-bind="couple.city"></td>
                       <td ng-bind="couple.homePhone"></td>
                       <td ng-bind="couple.primaryEmail"></td>
-                      <td><a ng-href="#!/couples/{{couple._id}}" class="btn btn-info">more info</a></td>
+                      <td><a ui-sref="couples.view({coupleId: couple._id})" class="btn btn-info">more info</a></td>
                     </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
               <div ng-hide="!couples || couples.length">
-                No Couples yet, why don't you <a href="/#!/couples/create">Add one</a>?
+                No Couples yet, why don't you <a ui-sref="articles.create">Add one</a>?
               </div>
               <div class="row">
                 <div class="col-sm-6">
