@@ -1,8 +1,8 @@
 'use strict';
 
 // Articles controller
-angular.module('couples').controller('CouplesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Couples',
-	function ($scope, $stateParams, $location, Authentication, Couples) {
+angular.module('couples').controller('CouplesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Couples', '$log',
+	function ($scope, $stateParams, $location, Authentication, Couples ) {
 		$scope.authentication = Authentication;
 
 		// Create new Couple
@@ -98,6 +98,28 @@ angular.module('couples').controller('CouplesController', ['$scope', '$statePara
 		// Find a list of Articles
 		$scope.find = function () {
 			$scope.couples = Couples.query();
+
+
+			$scope.filterCouples	= [],
+			$scope.itemsPerPage = 5,
+			$scope.currentPage = 1,
+			$scope.maxSize = 5;
+
+			console.log($scope.couples.length);
+			$scope.pageCount = function(){
+				return Math.ceil($scope.couples.length / $scope.itemsPerPage);
+			};
+
+			$scope.couples.$promise.then(function(){
+				$scope.totalItems = $scope.couples.length;
+				$scope.$watch(function(){
+					var begin =(($scope.currentPage -1) * $scope.itemsPerPage),
+							end = begin + $scope.itemsPerPage;
+
+					$scope.filterCouples = $scope.couples.slice(begin, end);
+				});
+			})
+
 		};
 
 		// Find existing Couple
@@ -106,5 +128,7 @@ angular.module('couples').controller('CouplesController', ['$scope', '$statePara
 				coupleId: $stateParams.coupleId
 			});
 		};
+
+
 	}
 ]);

@@ -35,18 +35,21 @@ var CoupleSchema = new Schema({
 		type: String,
 		default: '',
 		trim: true,
+		index: true,
 		required: 'His name cannot be blank'
 	},
 	herName: {
 		type: String,
 		default: '',
 		trim: true,
+		index: true,
 		required: 'Her name cannot be blank'
 	},
 	lastName: {
 		type: String,
 		default: '',
 		trim: true,
+		index: true,
 		required: 'Last name cannot be blank'
 	},
 	address: {
@@ -57,6 +60,7 @@ var CoupleSchema = new Schema({
 	city: {
 		type: String,
 		default: '',
+		index: true,
 		trim: true
 	},
 	zip: {
@@ -87,11 +91,13 @@ var CoupleSchema = new Schema({
 	primaryEmail: {
 		type: String,
 		default: '',
+		unique: true,
 		trim: true
 	},
 	secondaryEmail: {
 		type: String,
 		default: '',
+		unique: true,
 		trim: true
 	},
 	photo: {

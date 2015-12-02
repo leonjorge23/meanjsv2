@@ -24,10 +24,10 @@
                   </select> entries</label></div>
                 </div>
                 <div class="col-sm-6">
-                  <div id="dataTables-example_filter" class="dataTables_filter"><label>Search:<input type="search"
-                                                                                                     class="form-control input-sm"
-                                                                                                     placeholder=""
-                                                                                                     aria-controls="dataTables-example"></label>
+                  <div id="dataTables-example_filter" class="dataTables_filter">
+                    <label>Search:
+                      <input type="search" class="form-control input-sm" placeholder="Filter" ng-model="searchText",>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -46,7 +46,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="odd gradeX" ng-repeat="couple in couples">
+                    <tr class="odd gradeX" ng-repeat="couple in filterCouples | filter:searchText">
                       <td ng-bind="couple.hisName"></td>
                       <td ng-bind="couple.herName"></td>
                       <td ng-bind="couple.lastName"></td>
@@ -69,25 +69,14 @@
                   </div>
                 </div>
                 <div class="col-sm-6">
-                  <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
-                    <ul class="pagination">
-                      <li class="paginate_button previous disabled" aria-controls="dataTables-example" tabindex="0"
-                          id="dataTables-example_previous"><a href="#">Previous</a></li>
-                      <li class="paginate_button active" aria-controls="dataTables-example" tabindex="0"><a
-                        href="#">1</a></li>
-                      <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">2</a>
-                      </li>
-                      <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">3</a>
-                      </li>
-                      <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">4</a>
-                      </li>
-                      <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">5</a>
-                      </li>
-                      <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">6</a>
-                      </li>
-                      <li class="paginate_button next" aria-controls="dataTables-example" tabindex="0"
-                          id="dataTables-example_next"><a href="#">Next</a></li>
-                    </ul>
+                  <div class="pagination-container">
+                    <pagination
+                      total-items="totalItems"
+                      ng-model="currentPage"
+                      items-per-page="itemsPerPage"
+                      max-size="maxSize"
+                      boundary-links="true">
+                    </pagination>
                   </div>
                 </div>
               </div>
