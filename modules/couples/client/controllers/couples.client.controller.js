@@ -89,6 +89,7 @@ angular.module('couples').controller('CouplesController', ['$scope', '$statePara
 
 			couple.$update(function () {
 				$location.path('couples/' + couple._id);
+				console.log('1' + couple);
 			}, function (errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});

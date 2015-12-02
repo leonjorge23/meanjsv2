@@ -1,19 +1,15 @@
 // Invoke 'strict' JavaScript mode
 'use strict';
 
-var mongoose = require('mongoose'),
-		Couple = mongoose.model('Couple');
+var path = require('path'),
+		mongoose = require('mongoose'),
+		Couple = mongoose.model('Couple'),
+errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-var getErrorMessage = function (err) {
-	if (err.errors) {
-		for (var errName in err.errors) {
-			if (err.errors[errName].message) return err.errors[errName].message;
-		}
-	} else {
-		return 'Unknown server error';
-	}
-};
 
+/**
+ * Create a article
+ */
 exports.create = function (req, res) {
 	var couple = new Couple(req.body);
 
@@ -21,7 +17,7 @@ exports.create = function (req, res) {
 	couple.save(function (err) {
 		if (err) {
 			return res.status(400).send({
-				message: getErrorMessage(err)
+				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			res.json(couple);
@@ -29,22 +25,16 @@ exports.create = function (req, res) {
 	});
 };
 
-exports.list = function (req, res) {
-	Couple.find(function (err, couples) {
-		if (err) {
-			return res.status(400).send({
-				message: getErrorMessage(err)
-			});
-		} else {
-			res.json(couples);
-		}
-	});
-};
-
+/**
+ * Show the current article
+ */
 exports.read = function (req, res) {
 	res.json(req.couple);
 };
 
+/**
+ * Update a article
+ */
 exports.update = function (req, res) {
 	var couple = req.couple;
 
@@ -65,13 +55,17 @@ exports.update = function (req, res) {
 	couple.save(function (err) {
 		if (err) {
 			return res.status(400).send({
-				message: getErrorMessage(err)
+				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			res.json(couple);
 		}
 	});
 };
+
+/**
+ * Delete an article
+ */
 
 exports.delete = function (req, res) {
 	var couple = req.couple;
@@ -79,7 +73,7 @@ exports.delete = function (req, res) {
 	couple.remove(function (err) {
 		if (err) {
 			return res.status(400).send({
-				message: getErrorMessage(err)
+				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			res.json(couple);
@@ -87,31 +81,42 @@ exports.delete = function (req, res) {
 	});
 };
 
-exports.coupleByID = function (req, res, next, id) {
-	Couple.findById(id, function (err, couple) {
-		if (err) return next(err);
-		if (!couple) return next(new Error('Failed to find couple ' + id));
-		req.couple = couple;
-		next();
+/**
+ * List of Articles
+ */
+exports.list = function (req, res) {
+	Couple.find().exec(function (err, couples) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.json(couples);
+		}
 	});
 };
 
-exports.requiresLogin = function (req, res, next) {
-	if (!req.isAuthenticated()) {
-		return res.status(401).send({
-			message: 'User is not logged in'
+/**
+ * Article middleware
+ */
+exports.coupleByID = function (req, res, next, id) {
+
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res.status(400).send({
+			message: 'Couple Not found err:100a'
 		});
 	}
 
-	next();
-};
-
-exports.hasAuthorization = function (req, res, next) {
-	console.log('userid: ' + req.user.id);
-	if (0 !== 0) { // Todo ->> Fix this later
-		return res.status(403).send({
-			message: 'User is not authorized'
-		});
-	}
-	next();
+	Couple.findById(id).exec(function (err, couple) {
+		if (err) {
+			return next(err);
+		} else if (!couple) {
+			return res.status(404).send({
+				message: 'No couple with that identifier has been found'
+			});
+		}
+		req.couple = couple;
+		console.log('2' + couple);
+		next();
+	});
 };

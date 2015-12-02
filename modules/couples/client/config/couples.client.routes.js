@@ -22,11 +22,11 @@ angular.module('couples').config(['$stateProvider',
 					}
 				})
 				.state('couples.view', {
-					url: '/:coupleID',
+					url: '/:coupleId',
 					templateUrl: 'modules/couples/client/views/view-couple.client.view.html'
 				})
 				.state('couples.edit', {
-					url: '/:coupleID/edit',
+					url: '/:coupleId/edit',
 					templateUrl: 'modules/couples/client/views/edit-couple.client.view.html',
 					data: {
 						roles: ['user', 'admin']

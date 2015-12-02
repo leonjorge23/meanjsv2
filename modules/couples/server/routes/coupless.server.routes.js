@@ -7,12 +7,12 @@ var couplesPolicy = require('../policies/couples.server.policy.js'),
 		couples = require('../controllers/couples.server.controller.js');
 
 module.exports = function (app) {
-	// Articles collection routes
+	// Couples collection routes
 	app.route('/api/couples').all(couplesPolicy.isAllowed)
 			.get(couples.list)
 			.post(couples.create);
 
-	// Single article routes
+	// Single couple routes
 	app.route('/api/couples/:coupleId').all(couplesPolicy.isAllowed)
 			.get(couples.read)
 			.put(couples.update)

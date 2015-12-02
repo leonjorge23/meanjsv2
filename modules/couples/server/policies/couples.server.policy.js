@@ -43,15 +43,15 @@ exports.invokeRolesPolicies = function () {
 };
 
 /**
- * Check If couploes Policy Allows
+ * Check If Couples Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
 	var roles = (req.user) ? req.user.roles : ['guest'];
 
 	// If an couple is being processed and the current user created it then allow any manipulation
-	if (req.couple && req.user && req.couple.user.id === req.user.id) {
+/*	if (req.couple && req.user && req.couple.user.id === req.user.id) {
 		return next();
-	}
+	}*/
 
 	// Check for user roles
 	acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

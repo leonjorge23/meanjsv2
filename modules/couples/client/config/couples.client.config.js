@@ -1,6 +1,6 @@
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Couples module
 angular.module('couples').run(['Menus',
 	function (Menus) {
 		// Add the articles dropdown item
@@ -21,7 +21,7 @@ angular.module('couples').run(['Menus',
 		Menus.addSubMenuItem('topbar', 'couples', {
 			title: 'Add New Couple',
 			state: 'couples.create',
-			roles: ['user']
+			roles: ['user', 'admin']
 		});
 	}
 ]);
